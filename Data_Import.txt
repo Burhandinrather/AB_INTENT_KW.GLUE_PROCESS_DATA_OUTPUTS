@@ -1,0 +1,96 @@
+--------GLUE_PROCESS_DATA_OUTPUTS
+
+create or replace table AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY(
+abid varchar(16777216) , timestamp varchar(16777216) ,company varchar(16777216),event varchar(16777216),
+keyword varchar(16777216), year varchar(16777216), week varchar(16777216), fakedate varchar(16777216),  intent_score varchar(16777216),
+sum_distinct_keyword_weights_av varchar(16777216), sum_event_weights_keyword_weights_av varchar(16777216),
+client_name varchar(16777216),event_country varchar(16777216),
+client  varchar(16777216),	country_code  varchar(16777216), year_no varchar(16777216),
+week_no varchar(16777216),	companyname  varchar(16777216),	countrycode  varchar(16777216), sector  varchar(16777216),
+industry  varchar(16777216), employees_range  varchar(16777216), 	company_sub_industry  varchar(16777216),
+estimated_annual_revenue  varchar(16777216), 	account_segment  varchar(16777216),	kw  varchar(16777216),
+clientname  varchar(16777216),	Topics  varchar(16777216) 
+)
+
+create or replace table AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION(
+abid varchar(16777216) , timestamp varchar(16777216) ,company varchar(16777216),event varchar(16777216),
+keyword varchar(16777216), year varchar(16777216), week varchar(16777216), fakedate varchar(16777216),  intent_score varchar(16777216),
+sum_distinct_keyword_weights_av varchar(16777216), sum_event_weights_keyword_weights_av varchar(16777216),
+client_name varchar(16777216),event_country varchar(16777216),
+client  varchar(16777216),	country_code  varchar(16777216), year_no varchar(16777216),
+week_no varchar(16777216),	companyname  varchar(16777216),	countrycode  varchar(16777216), sector  varchar(16777216),
+industry  varchar(16777216), employees_range  varchar(16777216), 	company_sub_industry  varchar(16777216),
+estimated_annual_revenue  varchar(16777216), 	account_segment  varchar(16777216),	kw  varchar(16777216),
+clientname  varchar(16777216),	Topics  varchar(16777216) 
+)
+
+
+create or replace table AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK(
+abid varchar(16777216) , timestamp varchar(16777216) ,company varchar(16777216),event varchar(16777216),
+keyword varchar(16777216), year varchar(16777216), week varchar(16777216), fakedate varchar(16777216),  intent_score varchar(16777216),
+sum_distinct_keyword_weights_av varchar(16777216), sum_event_weights_keyword_weights_av varchar(16777216),
+client_name varchar(16777216),event_country varchar(16777216),
+client  varchar(16777216),	country_code  varchar(16777216), year_no varchar(16777216),
+week_no varchar(16777216),	companyname  varchar(16777216),	countrycode  varchar(16777216), sector  varchar(16777216),
+industry  varchar(16777216), employees_range  varchar(16777216), 	company_sub_industry  varchar(16777216),
+estimated_annual_revenue  varchar(16777216), 	account_segment  varchar(16777216),	kw  varchar(16777216),
+clientname  varchar(16777216),	Topics  varchar(16777216) 
+)
+
+----INTEREXION
+create or replace stage AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION
+url="s3://audience-bridge-data-cleaning/glue_process_data_outputs/client_output/Interexion/"
+CREDENTIALS = ( AWS_KEY_ID = 'AKIA2ZGCX6KKHSMF7Q6B' AWS_SECRET_KEY = 'bBHhbztiBPGTdtBknZxR7TuzDnjoOEiZRO7F34ZB');
+
+----EY
+create or replace stage AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY
+url="s3://audience-bridge-data-cleaning/glue_process_data_outputs/client_output/EY/"
+CREDENTIALS = ( AWS_KEY_ID = 'AKIA2ZGCX6KKHSMF7Q6B' AWS_SECRET_KEY = 'bBHhbztiBPGTdtBknZxR7TuzDnjoOEiZRO7F34ZB');
+
+----MAERSK
+create or replace stage AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK
+url="s3://audience-bridge-data-cleaning/glue_process_data_outputs/client_output/Maersk/"
+CREDENTIALS = ( AWS_KEY_ID = 'AKIA2ZGCX6KKHSMF7Q6B' AWS_SECRET_KEY = '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');
+
+SELECT COUNT(*) FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY
+SELECT COUNT(*) FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION
+SELECT COUNT(*) FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK
+
+
+COPY INTO AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION
+file_format = (type = 'CSV', FIELD_DELIMITER = ',', FIELD_OPTIONALLY_ENCLOSED_BY = '"', SKIP_HEADER = 1)  ON_ERROR = 'CONTINUE';
+
+COPY INTO AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY
+file_format = (type = 'CSV', FIELD_DELIMITER = ',', FIELD_OPTIONALLY_ENCLOSED_BY = '"', SKIP_HEADER = 1)  ON_ERROR = 'CONTINUE';
+
+COPY INTO AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK 
+file_format = (type = 'CSV', FIELD_DELIMITER = ',', FIELD_OPTIONALLY_ENCLOSED_BY = '"', SKIP_HEADER = 1)  ON_ERROR = 'CONTINUE';
+
+
+select * from AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EY
+select * from AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.INTEREXION
+select * from AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.MAERSK
+
+
+----EVENTS_DATALAKE
+
+create or replace table AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE(
+  abid varchar(16777216) ,company varchar(16777216),INDUSTRY varchar(16777216),
+  ADDRESS1 varchar(16777216),CITY varchar(16777216), POSTAL_CODE varchar(16777216), COUNTRY_CODE varchar(16777216),
+  PUBLISHER varchar(16777216), CHANNEL varchar(16777216), KWTEXT varchar(16777216),
+ TIMESTAMP varchar(16777216),EVENT_LOCATION varchar(16777216),
+  WEEK_NO varchar(16777216),YEAR_NO varchar(16777216), KEYWORD_TEXT  varchar(16777216)
+)
+
+create or replace stage AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE
+url="s3://audience-bridge-data-cleaning/glue_process_data_outputs/events_datalake/"
+CREDENTIALS = ( AWS_KEY_ID = 'AKIA2ZGCX6KKHSMF7Q6B' AWS_SECRET_KEY = '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')
+
+SELECT COUNT(*) FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE
+
+COPY INTO AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE FROM @AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE 
+file_format = (type = 'CSV', FIELD_DELIMITER = ',', FIELD_OPTIONALLY_ENCLOSED_BY = '"', SKIP_HEADER = 1,
+error_on_column_count_mismatch=false)  ON_ERROR = 'CONTINUE';
+
+select COUNT(*) from  AB_INTENT_KW.GLUE_PROCESS_DATA_OUTPUTS.EVENTS_DATALAKE
+---9831188
